@@ -8,8 +8,11 @@ import (
 
 type RestaurantType string
 
-const TypeNormal RestaurantType = "normal"
-const TypePremium RestaurantType = "premium"
+const (
+	TypeNormal  RestaurantType = "normal"
+	TypePremium RestaurantType = "premium"
+	EntityName                 = "Restaurant"
+)
 
 type Restaurant struct {
 	common.SQLModel
@@ -22,14 +25,22 @@ func (Restaurant) TableName() string {
 	return "restaurants"
 }
 
+func (r *Restaurant) Mask(isAdminOrOwner bool) {
+	r.GenUID(common.DbTypeRestaurant)
+}
+
 type RestaurantCreate struct {
-	common.SQLModel
-	Name string `json:"name" gorm:"column:name;"`
-	Addr string `json:"addr" gorm:"column:addr;"`
+	common.SQLModel `json:",inline"`
+	Name            string `json:"name" gorm:"column:name;"`
+	Addr            string `json:"addr" gorm:"column:addr;"`
 }
 
 func (RestaurantCreate) TableName() string {
 	return Restaurant{}.TableName()
+}
+
+func (data *RestaurantCreate) Mask(isAdminOrOwner bool) {
+	data.GenUID(common.DbTypeRestaurant)
 }
 
 func (data *RestaurantCreate) Validate() error {

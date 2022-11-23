@@ -2,6 +2,7 @@ package main
 
 import (
 	"g05-food-delivery/component/appctx"
+	"g05-food-delivery/middleware"
 	"g05-food-delivery/module/restaurant/transport/ginrestaurant"
 	"github.com/gin-gonic/gin"
 	"github.com/subosito/gotenv"
@@ -29,14 +30,16 @@ func main() {
 
 	db = db.Debug()
 
+	appContext := appctx.NewAppContext(db)
+
 	r := gin.Default()
+	r.Use(middleware.Recover(appContext))
+
 	r.GET("/ping", func(c *gin.Context) {
 		c.JSON(http.StatusOK, gin.H{
 			"message": "pong",
 		})
 	})
-
-	appContext := appctx.NewAppContext(db)
 
 	//POST restaurants
 	v1 := r.Group("/v1")

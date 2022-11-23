@@ -2,6 +2,7 @@ package restaurantbiz
 
 import (
 	"context"
+	"g05-food-delivery/common"
 	restaurantmodel "g05-food-delivery/module/restaurant/model"
 )
 
@@ -24,7 +25,7 @@ func NewFindRestaurantBiz(store FindRestaurantStore) *findRestaurantBiz {
 func (biz *findRestaurantBiz) FindRestaurant(context context.Context, id int) (*restaurantmodel.Restaurant, error) {
 	data, err := biz.store.FindDataWithCondition(context, map[string]interface{}{"id": id})
 	if err != nil {
-		return nil, err
+		return nil, common.ErrCannotFindEntity(restaurantmodel.EntityName, err)
 	}
 	return data, nil
 }
