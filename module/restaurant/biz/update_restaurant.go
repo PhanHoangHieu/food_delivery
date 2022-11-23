@@ -2,6 +2,7 @@ package restaurantbiz
 
 import (
 	"context"
+	"g05-food-delivery/common"
 	restaurantmodel "g05-food-delivery/module/restaurant/model"
 )
 
@@ -24,7 +25,7 @@ func NewUpdateRestaurantBiz(store UpdateRestaurantStore) *updateRestaurantBiz {
 
 func (biz *updateRestaurantBiz) UpdateRestaurant(context context.Context, id int, data *restaurantmodel.RestaurantUpdate) error {
 	if err := biz.store.Update(context, id, data); err != nil {
-		return err
+		return common.ErrCannotUpdateEntity(restaurantmodel.EntityName, err)
 	}
 	return nil
 }

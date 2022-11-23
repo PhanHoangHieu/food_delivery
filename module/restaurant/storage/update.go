@@ -2,6 +2,7 @@ package restaurantstorage
 
 import (
 	"context"
+	"g05-food-delivery/common"
 	restaurantmodel "g05-food-delivery/module/restaurant/model"
 )
 
@@ -9,7 +10,7 @@ func (s *sqlStore) Update(context context.Context, id int, data *restaurantmodel
 	if err := s.db.Table(restaurantmodel.Restaurant{}.TableName()).
 		Where("id = ?", id).
 		Updates(&data).Error; err != nil {
-		return err
+		return common.ErrDB(err)
 	}
 	return nil
 }
